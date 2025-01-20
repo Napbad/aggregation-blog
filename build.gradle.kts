@@ -29,7 +29,7 @@ repositories {
 
 val jimmerVersion = "0.9.45"
 
-subprojects {
+allprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
 	apply(plugin = "org.jetbrains.kotlin.plugin.spring")
 	apply(plugin = "org.springframework.boot")
@@ -42,12 +42,16 @@ subprojects {
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-
+		implementation("org.springframework.boot:spring-boot-starter-data-redis")
 		implementation("org.springframework.boot:spring-boot-starter-jdbc")
-		implementation("org.springframework.boot:spring-boot-starter-web")
+		implementation("org.babyfish.jimmer:jimmer-spring-boot-starter:${jimmerVersion}")
 		implementation("org.babyfish.jimmer:jimmer-core:${jimmerVersion}")
 		compileOnly("org.babyfish.jimmer:jimmer-sql:${jimmerVersion}")
 		runtimeOnly("org.postgresql:postgresql")
+
+		implementation("org.springframework.boot:spring-boot-starter-mail")
+		implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+
 
 		runtimeOnly("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.25-1.0.20")
 		compileOnly("org.projectlombok:lombok")

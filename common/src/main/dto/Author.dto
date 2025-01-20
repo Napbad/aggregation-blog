@@ -1,0 +1,58 @@
+export org.napbad.model.entity.Author
+    -> package org.napbad.model.dto.author
+
+input AuthorRegisterInput {
+    authorId
+    authorName
+    email
+    password
+    captcha: String
+}
+
+AuthorRegisterOutput {
+    authorId
+    authorName
+    email
+    msg: String
+}
+
+input AuthorVerifyInput {
+    authorId?
+    email
+}
+
+input unsafe AuthorLoginInput {
+    authorId?
+    authorName
+    email
+    password
+    captcha: String?
+}
+
+AuthorLoginOutput {
+    authorId
+    authorName
+    email
+
+    contactInfo
+    bio
+    joinedTime
+    githubLink
+    weiboLink
+    verified
+
+    msg: String
+}
+
+input unsafe AuthorUpdateInput {
+    authorId
+    dynamic authorName?
+    dynamic bio
+    dynamic weiboLink
+    dynamic githubLink
+    dynamic contactInfo
+}
+
+AuthorUpdateOutput {
+    #allScalars
+}

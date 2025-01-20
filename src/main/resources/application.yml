@@ -7,3 +7,4 @@ jimmer:
     show-sql: true
     pretty-sql: true
     database-validation-mode: ERROR
+

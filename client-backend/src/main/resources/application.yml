@@ -1,9 +1,51 @@
 spring:
+    profiles:
+        include: dev
     application:
-        name: AggregationBlog
+        name: ${AB.application.name}
+    datasource:
+        driver-class-name: ${AB.datasource.driver-class-name}
+        url: ${AB.datasource.url}
+        username: ${AB.datasource.username}
+        password: ${AB.datasource.password}
+    data:
+        redis:
+            host: ${AB.data.redis.host}
+            port: ${AB.data.redis.port}
+            password: ${AB.data.redis.password}
+            database: ${AB.data.redis.database}
 
 jimmer:
-    dialect: org.babyfish.jimmer.sql.dialect.MySqlDialect
+    dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
     show-sql: true
     pretty-sql: true
     database-validation-mode: ERROR
+    client:
+        ts:
+            path: /ts.zip
+        openapi:
+            path: /openapi.yml
+            ui-path: /openapi.html
+            properties:
+                info:
+                    title: Napbad-Blog-API
+                    description: Napbad-Blog API document
+    language: kotlin
+
+AB:
+    jwt:
+        jwt-secret: ${AB.jwt.jwt-secret}
+        jwt-expiration-ms: ${AB.jwt.jwt-expiration-ms}
+        jwt-token-name: ${AB.jwt.jwt-token-name}
+    auth:
+        exclude:
+            exclude-paths:
+                - /user/login
+                - /search/**
+                - /user/register
+                - /admin/register
+                - /user/verify
+                - /admin/verify
+                - /test/**
+                - /openapi.html
+                - /openapi.yml
