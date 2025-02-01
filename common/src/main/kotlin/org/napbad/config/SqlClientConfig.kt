@@ -1,4 +1,4 @@
-package org.napbad.org.napbad.config
+package org.napbad.config
 
 import org.babyfish.jimmer.sql.meta.DatabaseNamingStrategy
 import org.babyfish.jimmer.sql.runtime.DefaultDatabaseNamingStrategy

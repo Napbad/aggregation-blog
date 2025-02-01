@@ -3,52 +3,98 @@
     <h1 class="login-title">登录</h1>
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="form-group">
-        <input type="text" v-model="username" placeholder="用户名" class="form-input"/>
+        <label>
+          <input type="radio" v-model="loginType" value="username" checked /> 用户名
+        </label>
+        <label>
+          <input type="radio" v-model="loginType" value="email" /> 邮箱
+        </label>
+      </div>
+      <div class="form-group" v-if="loginType === 'username'">
+        <input type="text" v-model="authorName" placeholder="用户名" class="form-input" />
+      </div>
+      <div class="form-group" v-if="loginType === 'email'">
+        <input type="email" v-model="email" placeholder="邮箱" class="form-input" />
       </div>
       <div class="form-group">
-        <input type="password" v-model="password" placeholder="密码" class="form-input"/>
+        <input type="password" v-model="password" placeholder="密码" class="form-input" />
       </div>
       <button type="submit" class="login-button">登录</button>
+      <div class="register-link">
+        <router-link to="/register">还没有账号？去注册</router-link>
+      </div>
     </form>
   </div>
 </template>
 
-
 <script lang="ts">
-import {defineComponent, PropType} from 'vue';
-import {UserAccountController} from "@/api/services";
+import { defineComponent } from 'vue';
+import { UserAccountController } from "@/api/services";
+import { Executor } from "@/api";
 
 export default defineComponent({
-  props: {
-    executor: {
-      type: Object as PropType<any>,
-      required: true,
-    },
-  },
   data() {
     return {
-      data: {
-        username: String,
-        password: String,
-      },
-      methods: {
-        password: "",
-        username: "",
-
-        async handleLogin() {
-          const userAccountController = new UserAccountController(this.executor);
-          const response = await userAccountController.login({
-            body: {
-              username: this.username,
+      authorName: '' as string,
+      email: '' as string,
+      password: '' as string,
+      authorId: undefined as number | undefined,
+      loginType: 'username' as 'username' | 'email',
+    };
+  },
+  methods: {
+    async handleLogin() {
+      const executor: Executor = async () => {
+        const body = this.loginType === 'username'
+          ? {
+              authorId: this.authorId,
+              authorName: this.authorName,
               password: this.password,
-            },
-          });
-          console.log('登录成功', response);
-        },
+            }
+          : {
+              authorId: this.authorId,
+              email: this.email,
+              password: this.password,
+            };
+
+        const response = await fetch("/api/user-account/login", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        return response.json();
+      };
+
+      const userAccountController = new UserAccountController(executor);
+
+      const loginInput = this.loginType === 'username'
+        ? {
+            authorId: this.authorId,
+            authorName: this.authorName,
+            password: this.password,
+          }
+        : {
+            authorId: this.authorId,
+            email: this.email,
+            password: this.password,
+          };
+
+      const response = await userAccountController.login({
+        body: loginInput
+      });
+
+      if (response.email) {
+        console.log('登录成功', response);
+        // 跳转到主页或其他页面
+        this.$router.push('/');
+      } else {
+        console.error('登录失败', response);
       }
     }
   }
-})
+});
 </script>
 
 <style scoped>
@@ -98,5 +144,19 @@ export default defineComponent({
 
 .login-button:hover {
   background-color: #0056b3;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.register-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }
 </style>

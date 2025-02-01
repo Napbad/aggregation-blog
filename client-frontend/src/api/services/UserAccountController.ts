@@ -1,4 +1,4 @@
-import type {Executor} from '../';
+import type {Executor} from '../index.ts';
 import type {
     AuthorLoginInput, 
     AuthorLoginOutput, 
@@ -7,7 +7,7 @@ import type {
     AuthorUpdateInput, 
     AuthorUpdateOutput, 
     AuthorVerifyInput
-} from '../model/static/';
+} from '../model/static';
 
 export class UserAccountController {
     

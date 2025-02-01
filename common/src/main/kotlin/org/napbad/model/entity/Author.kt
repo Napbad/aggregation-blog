@@ -4,6 +4,7 @@ import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.Id
 import org.babyfish.jimmer.sql.GeneratedValue
 import org.babyfish.jimmer.sql.GenerationType
+import java.time.LocalDateTime
 import kotlin.time.TimeSource
 
 
@@ -20,7 +21,7 @@ interface Author {
 
     val bio: String?
 
-    val joinedTime: TimeSource?
+    val joinedTime: LocalDateTime?
 
     val email: String
 

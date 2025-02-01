@@ -5,15 +5,15 @@ import java.util.logging.Logger
 
 val logger: Logger = Logger.getLogger("main")
 
-fun log(message: String) {
+fun logInfo(message: String) {
     logger.info(message)
 }
 
-fun warn(message: String) {
+fun logWarn(message: String) {
     logger.log(Level.WARNING, message)
 }
 
-fun error(message: String, throwable: Throwable? = null) {
+fun logError(message: String, throwable: Throwable? = null) {
     if (throwable == null) {
         logger.log(Level.SEVERE, message)
     } else {

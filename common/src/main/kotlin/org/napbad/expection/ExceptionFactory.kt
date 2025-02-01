@@ -15,6 +15,7 @@ object ExceptionFactory {
             ErrorCode.PASSWORD_NOT_VALID -> BaseException(code, "Password is not valid")
             ErrorCode.EMAIL_NOT_VALID -> BaseException(code, "Email is not valid")
             ErrorCode.USERNAME_OR_PASSWORD_WRONG -> BaseException(code, "Username or password is wrong")
+            ErrorCode.TOO_MUCH_ACCOUNT_INPUT -> BaseException(code, "Too much account input")
         }
     }
 

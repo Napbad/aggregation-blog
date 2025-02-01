@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "org.napbad"
+group = ""
 version = "0.0.1-SNAPSHOT"
 
 repositories {

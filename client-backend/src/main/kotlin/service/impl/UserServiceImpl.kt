@@ -4,14 +4,11 @@ import lombok.extern.slf4j.Slf4j
 import org.babyfish.jimmer.sql.JSqlClient
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
-import org.napbad.model.entity.Author
-import org.napbad.model.entity.AuthorProps
-import org.napbad.model.entity.authorId
-import org.napbad.model.entity.email
 import org.napbad.clientbackend.service.UserService
 import org.napbad.expection.ErrorCode
 import org.napbad.expection.ExceptionFactory
 import org.napbad.model.dto.author.*
+import org.napbad.model.entity.*
 import org.springframework.stereotype.Service
 import org.napbad.utilities.security.SHA256Encryption
 
@@ -43,24 +40,33 @@ class UserServiceImpl(
             }
         }
 
-        val authorSimpleSaveResult = sqlClient.insert(author)
+        val authorSimpleSaveResult = sqlClient.insert(author.copy(password = SHA256Encryption.getSHA256(author.password)))
 
         return AuthorRegisterOutput(authorSimpleSaveResult.modifiedEntity)
     }
 
     override fun login(user: AuthorLoginInput): AuthorLoginOutput {
-        val authors = sqlClient.createQuery(
-            Author::class
-        ) {
-            where(table.email.eq(user.email))
-            select(table)
-        }.limit(2).execute()
+        val authors = if (!user.email.isNullOrBlank()) {
+            sqlClient.createQuery(
+                Author::class
+            ) {
+                where(table.email.eq(user.email))
+                select(table)
+            }.limit(2).execute()
+        } else {
+            sqlClient.createQuery(
+                Author::class
+            ) {
+                where(table.authorName.eq(user.authorName))
+                select(table)
+            }.limit(2).execute()
+        }
 
         if (authors.size != 1) {
             throw ExceptionFactory.exception(ErrorCode.UNKNOWN_ERROR)
         }
 
-        if ((authors[0].password != user.password?.let { SHA256Encryption.getSHA256(it) })
+        if ((authors[0].password != user.password.let { SHA256Encryption.getSHA256(it) })
             ) {
             throw ExceptionFactory.exception(ErrorCode.USERNAME_OR_PASSWORD_WRONG)
         }

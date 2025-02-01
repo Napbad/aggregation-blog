@@ -8,7 +8,7 @@ import org.napbad.expection.ErrorCode
 import org.napbad.expection.ExceptionFactory
 import org.napbad.properties.AuthExcludePathProperties
 import org.napbad.properties.JwtProperties
-import org.napbad.utilities.log.log
+import org.napbad.utilities.log.logInfo
 import org.napbad.utilities.security.JwtUtil
 import org.springframework.stereotype.Component
 import org.springframework.util.AntPathMatcher
@@ -28,6 +28,14 @@ class AuthorFilter(
         filterChain: FilterChain
     ) {
 
+        // print request basic info
+        logInfo("Request Method: ${request.method}")
+        logInfo("Request URI: ${request.requestURI}")
+        logInfo("Request Headers:")
+        request.headerNames?.asSequence()?.forEach { headerName ->
+            logInfo("  $headerName: ${request.getHeader(headerName)}")
+        }
+
         if (isExcluded(request.requestURI)) {
             filterChain.doFilter(request, response)
             return
@@ -36,7 +44,7 @@ class AuthorFilter(
         var token: String? = request.getHeader("Authorization")
             ?: throw ExceptionFactory.exception(ErrorCode.USER_NOT_LOGIN, "token is null")
         token = token?.replace("Bearer ", "")
-        log("token: $token")
+        logInfo("token: $token")
 
         try {
 
@@ -46,7 +54,7 @@ class AuthorFilter(
 
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
-            log("error: ${e.message}")
+            logInfo("error: ${e.message}")
         }
     }
 

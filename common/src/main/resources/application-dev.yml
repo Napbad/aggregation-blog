@@ -18,16 +18,3 @@ AB:
         jwt-secret: Napbad
         jwt-expiration-ms: 86400000
         jwt-token-name: Authorization
-
-    mail:
-        host: smtp.163.com
-        port: 465
-        username: sjs1910191@163.com
-        password: RVv6WZ4BwRDEBNCK
-        protocol: smtps
-        properties:
-            mail:
-                smtp:
-                    auth: true
-                    ssl:
-                        enable: true

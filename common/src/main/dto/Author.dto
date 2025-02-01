@@ -23,8 +23,8 @@ input AuthorVerifyInput {
 
 input unsafe AuthorLoginInput {
     authorId?
-    authorName
-    email
+    authorName?
+    email?
     password
     captcha: String?
 }

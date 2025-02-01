@@ -3,21 +3,30 @@
     <h1 class="register-title">注册</h1>
     <form @submit.prevent="handleRegister" class="register-form">
       <div class="form-group">
-        <input type="text" v-model="username" placeholder="用户名" class="form-input" />
+        <input type="text" v-model="authorName" placeholder="用户名" class="form-input" />
       </div>
       <div class="form-group">
         <input type="password" v-model="password" placeholder="密码" class="form-input" />
       </div>
+      <div class="form-group">
+        <input type="email" v-model="email" placeholder="邮箱" class="form-input" />
+      </div>
+      <div class="form-group">
+        <input type="text" v-model="captcha" placeholder="验证码" class="form-input" />
+      </div>
+      <button type="button" class="register-button" @click="handleGetCaptcha">获取验证码</button>
+      <p></p>
       <button type="submit" class="register-button">注册</button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
 import { UserAccountController } from '@/api/services/UserAccountController';
 import {AuthorRegisterInput} from "@/api/model/static";
 import {Executor} from "@/api";
+import {ElMessage} from "element-plus";
 
 export default defineComponent({
   data() {
@@ -26,17 +35,34 @@ export default defineComponent({
       password: '',
       email: '',
       captcha: '',
+      authorId: undefined as number | undefined,
     };
   },
   methods: {
     async handleRegister() {
-      const executor = inject<Executor>('executor');
+      const executor: Executor = async () => {
+        const response = await fetch("/api/user-account/register", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            authorId: this.authorId,
+            authorName: this.authorName,
+            email: this.email,
+            password: this.password,
+            captcha: this.captcha,
+          })
+        });
+        return response.json();
+      };
       if (!executor) {
         console.error('Executor is not provided');
         return;
       }
       const userAccountController = new UserAccountController(executor);
       const registerData : AuthorRegisterInput = {
+        authorId: this.authorId,
         authorName: this.authorName,
         password: this.password,
         email: this.email,
@@ -47,6 +73,33 @@ export default defineComponent({
       });
       console.log('注册成功', response);
     },
+    async handleGetCaptcha() {
+      const executor: Executor = async () => {
+        const response = await fetch("http://localhost:8080/user-account/get-captcha", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            authorId: this.authorId,
+            authorName: this.authorName,
+            email: this.email,
+            password: this.password,
+          })
+        });
+        return response.json();
+      };
+
+      const userAccountController = new UserAccountController(executor);
+      const response = await userAccountController.getCaptcha({
+        body: {
+          authorId: this.authorId,
+          email: this.email,
+        },
+      });
+
+      ElMessage.info(response);
+    }
   },
 });
 </script>

@@ -15,13 +15,6 @@ spring:
             password: ${AB.data.redis.password}
             database: ${AB.data.redis.database}
 
-    mail:
-        username: ${AB.mail.username}
-        password: ${AB.mail.password}
-        host: ${AB.mail.host}
-        port: ${AB.mail.port}
-        protocol: ${AB.mail.protocol}
-
 jimmer:
     dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
     show-sql: true
@@ -38,7 +31,7 @@ jimmer:
                     title: Napbad-Blog-API
                     description: Napbad-Blog API document
     language: kotlin
-
+    mutable: true
 
 AB:
     jwt:
@@ -48,11 +41,11 @@ AB:
     auth:
         exclude:
             exclude-paths:
-                - /user-account/login
+                - /user/login
                 - /search/**
-                - /user-account/register
+                - /user/register
                 - /admin/register
-                - /user-account/get-captcha
+                - /user/verify
                 - /admin/verify
                 - /test/**
                 - /openapi.html

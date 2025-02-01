@@ -1,6 +1,6 @@
-export {Api} from './Api';
-export type {AllErrors, ApiErrors} from './ApiErrors';
-export type {ElementOf} from './ElementOf';
-export type {Executor} from './Executor';
-export type {RequestOf} from './RequestOf';
-export type {ResponseOf} from './ResponseOf';
+export {Api} from './Api.ts';
+export type {AllErrors, ApiErrors} from './ApiErrors.ts';
+export type {ElementOf} from './ElementOf.ts';
+export type {Executor} from './Executor.ts';
+export type {RequestOf} from './RequestOf.ts';
+export type {ResponseOf} from './ResponseOf.ts';

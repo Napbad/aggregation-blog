@@ -1,0 +1,76 @@
+export org.napbad.model.entity.Article
+    -> package org.napbad.model.dto.article
+
+input ArticleCreateInput {
+    articleId
+    authorId
+    title
+    content
+    category
+    copyrightInfo
+}
+
+ArticleCreateOutput {
+    articleId
+    authorId
+    title
+    content
+    category
+    copyrightInfo
+
+    publishTime
+    version
+}
+
+ArticleUpdateInput {
+    articleId
+    authorId
+    title
+    content
+    category
+    copyrightInfo
+}
+
+ArticleUpdateOutput {
+    articleId
+    authorId
+    title
+    content
+    category
+    copyrightInfo
+
+    publishTime
+    version
+}
+
+ArticleDeleteInput {
+    articleId
+}
+
+specification ArticleSpecification {
+    articleId
+    authorId
+    like(title)
+    like(content)
+    ge(publishTime)
+    le(publishTime)
+    gt(version)
+    lt(version)
+    like(category)
+    like(copyrightInfo)
+
+    pageNum: Int?
+    pageSize: Int?
+}
+
+ArticleQueryOutput {
+    articleId
+    authorId
+    title
+    content
+    category
+    copyrightInfo
+
+    publishTime
+    version
+}
