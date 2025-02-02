@@ -88,7 +88,7 @@ export default defineComponent({
       if (response.email) {
         console.log('登录成功', response);
         // 跳转到主页或其他页面
-        this.$router.push('/');
+        this.$router.push('/blog');
       } else {
         console.error('登录失败', response);
       }

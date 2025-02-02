@@ -1,7 +1,10 @@
 export type {ArticleCreateInput} from './ArticleCreateInput.ts';
 export type {ArticleCreateOutput} from './ArticleCreateOutput.ts';
+export type {ArticleDeleteInput} from './ArticleDeleteInput.ts';
 export type {ArticleQueryOutput} from './ArticleQueryOutput.ts';
 export type {ArticleSpecification} from './ArticleSpecification.ts';
+export type {ArticleUpdateInput} from './ArticleUpdateInput.ts';
+export type {ArticleUpdateOutput} from './ArticleUpdateOutput.ts';
 export type {AuthorLoginInput} from './AuthorLoginInput.ts';
 export type {AuthorLoginOutput} from './AuthorLoginOutput.ts';
 export type {AuthorRegisterInput} from './AuthorRegisterInput.ts';

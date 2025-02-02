@@ -1,5 +1,3 @@
-import type {TimeSource} from './index.ts';
-
 export interface AuthorLoginOutput {
     readonly authorId: number;
     readonly authorName: string;
@@ -7,7 +5,7 @@ export interface AuthorLoginOutput {
     readonly contactInfo?: string | undefined;
     readonly email: string;
     readonly githubLink?: string | undefined;
-    readonly joinedTime?: TimeSource | undefined;
+    readonly joinedTime?: string | undefined;
     readonly msg: string;
     readonly verified: boolean;
     readonly weiboLink?: string | undefined;
