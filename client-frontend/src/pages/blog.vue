@@ -28,7 +28,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Blog',
-
   data() {
     return {
       posts: [

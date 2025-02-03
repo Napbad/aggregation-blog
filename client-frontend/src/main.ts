@@ -11,8 +11,8 @@ import Prism from 'prismjs';
 VueMarkdownEditor.use(vuepressTheme, {
     Prism,
 });
-
 const app = createApp(App);
 app.use(router);
 app.use(VueMarkdownEditor);
+
 app.mount('#app');

@@ -31,6 +31,7 @@
 import { defineComponent } from 'vue';
 import { UserAccountController } from "@/api/services";
 import { Executor } from "@/api";
+import {userAccountInfo_localStorageKey} from "@/constants/keys.ts";
 
 export default defineComponent({
   data() {
@@ -85,8 +86,9 @@ export default defineComponent({
         body: loginInput
       });
 
-      if (response.email) {
+      if (response.authorId) {
         console.log('登录成功', response);
+        localStorage.setItem(userAccountInfo_localStorageKey, JSON.stringify(response));
         // 跳转到主页或其他页面
         this.$router.push('/blog');
       } else {

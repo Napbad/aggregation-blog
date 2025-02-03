@@ -26,7 +26,11 @@
     </div>
 
     <!-- Vue Markdown Editor 组件 -->
-    <v-md-editor v-model="markdownText" :height="500" class="md-editor" />
+    <v-md-editor v-model="markdownText" :height="500" class="md-editor"/>
+
+    <br>
+    <br>
+    <br>
 
     <!-- 保存按钮，点击时调用 saveMarkdown 方法 -->
     <button @click="saveMarkdown" class="save-button">保存</button>
@@ -35,16 +39,29 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+// import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
 import { Executor } from '@/api';
 import { ArticleController } from '@/api/services';
+import {useRouter} from "vue-router";
+import {userAccountInfo_localStorageKey} from "@/constants/keys.ts";
 
 export default defineComponent({
   components: {
-    VMdEditor,
+    // VueMarkdownEditor,
+  },
+
+  setup() {
+    const router = useRouter();
+    const userData = localStorage.getItem(userAccountInfo_localStorageKey);
+    if (!userData) {
+      router.push('/login');
+    }
+    return {
+      // VueMarkdownEditor,
+      markdownText
+    };
   },
   data() {
     return {
@@ -105,7 +122,7 @@ export default defineComponent({
 });
 
 // 配置 VMdEditor 使用 github 主题
-VMdEditor.use(githubTheme);
+// VMdEditor.use(githubTheme);
 
 // 定义一个响应式数据，用于存储 Markdown 文本
 const markdownText = ref('');
@@ -114,7 +131,7 @@ const markdownText = ref('');
 <style scoped>
 .write-container {
   padding: 40px;
-  max-width: 800px;
+  max-width: 1600px;
   margin: 0 auto;
   background-color: #f9f9f9;
   border-radius: 12px;
