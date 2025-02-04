@@ -37,7 +37,7 @@ onMounted(() => {
     post.value = foundPost;
   } else {
     // 如果没有找到博客文章，重定向到 404 页面
-    router.push('/404');
+    router.push('/not_found');
   }
 });
 </script>
