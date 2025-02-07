@@ -5,6 +5,7 @@ import org.babyfish.jimmer.Page
 import org.babyfish.jimmer.client.meta.Api
 import org.napbad.clientbackend.service.ArticleService
 import org.napbad.model.dto.article.*
+import org.napbad.utilities.log.logInfo
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("article-account")
+@RequestMapping("/article")
 class ArticleController (
     val articleService: ArticleService
 ) {
@@ -27,6 +28,10 @@ class ArticleController (
         @RequestBody article: ArticleCreateInput
     ): ArticleCreateOutput
     {
+        if (article.title.isBlank()) {
+            throw RuntimeException("title is null or blank")
+        }
+        logInfo("add article: ${article.title}")
         return articleService.add(article)
     }
 

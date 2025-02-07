@@ -39,7 +39,6 @@ jimmer:
                     description: Napbad-Blog API document
     language: kotlin
 
-
 AB:
     jwt:
         jwt-secret: ${AB.jwt.jwt-secret}

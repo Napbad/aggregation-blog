@@ -1,12 +1,14 @@
 package org.napbad.clientbackend.controller
 
 import lombok.extern.slf4j.Slf4j
+import model.AuthorLoginResult
 import org.babyfish.jimmer.client.meta.Api
 import org.napbad.model.dto.author.*
 import org.napbad.clientbackend.service.UserService
 import org.napbad.expection.ErrorCode
 import org.napbad.expection.ExceptionFactory
 import org.napbad.clientbackend.utilities.MailUtil
+import org.napbad.properties.JwtProperties
 import org.napbad.utilities.log.logError
 import org.napbad.utilities.log.logInfo
 import org.springframework.data.redis.core.RedisTemplate
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.napbad.utilities.security.AccountUtil
 import org.napbad.utilities.security.CaptchaGenerator
+import org.napbad.utilities.security.JwtUtil
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.http.HttpStatus
 
 @Api
 @Slf4j
@@ -24,7 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 class UserAccountController(
     private val userService: UserService,
     private val redisTemplate: RedisTemplate<Any, Any>,
-    private val mailUtil: MailUtil
+    private val mailUtil: MailUtil,
+    private val jwtProperties: JwtProperties
 ) {
     @Api
     @PostMapping("/register")
@@ -53,14 +59,14 @@ class UserAccountController(
         return userService.register(user)
     }
 
-    @Api
-    @PostMapping("/login")
-    fun login(
-        @RequestBody user: AuthorLoginInput
-    ): AuthorLoginOutput {
+@Api
+@PostMapping("/login")
+fun login(
+    @RequestBody user: AuthorLoginInput
+): ResponseEntity<AuthorLoginResult> {
 
+    try {
         var validAccountInput: Boolean = true
-
 
         // 邮箱，用户名只能输入一个
         if (user.email?.isBlank() == true && user.authorName?.isBlank() == true) {
@@ -87,8 +93,25 @@ class UserAccountController(
         }
 
         logInfo("Logging in user: ${user.email}")
-        return userService.login(user)
+        val output = userService.login(user)
+
+        val map = mapOf<String, Any>("id" to output.authorId)
+
+        val createJWT = JwtUtil.createJWT(jwtProperties.jwtSecret, jwtProperties.jwtExpirationMs, map)
+
+        val result = AuthorLoginResult(
+            output,
+            "Bearer $createJWT"
+        )
+
+        logInfo("Returning login result: (${result.authorLoginOutput})")
+
+        return ResponseEntity.ok(result)
+    } catch (e: Exception) {
+        logError("Error during login: ${e.message}")
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null)
     }
+}
 
     @Api
     @PostMapping("/get-captcha")

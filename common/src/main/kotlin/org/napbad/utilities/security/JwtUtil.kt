@@ -2,10 +2,8 @@ package org.napbad.utilities.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtBuilder
-import io.jsonwebtoken.JwtParserBuilder
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import io.jsonwebtoken.security.SignatureAlgorithm
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -25,7 +23,7 @@ object JwtUtil {
      * @param claims 要设置到JWT中的声明信息。
      * @return 生成的JWT Token字符串。
      */
-    fun createJWT(secretKey: String, ttlMillis: Long, claims: Map<String?, Any?>?): String {
+    fun createJWT(secretKey: String, ttlMillis: Long, claims: Map<String, Any>): String {
 
         // 计算JWT的过期时间
         val expMillis = System.currentTimeMillis() + ttlMillis
@@ -35,7 +33,7 @@ object JwtUtil {
         // 构建JWT
         val builder: JwtBuilder = Jwts.builder()
             .claims(claims)
-            .expiration(Date(ttlMillis))
+            .expiration(exp)
             .signWith(key)
         return builder.compact()
     }
@@ -49,10 +47,22 @@ object JwtUtil {
      */
     fun parseJWT(secretKey: String, token: String?): Claims? {
         // 解析JWT
-        return Jwts.parser()
-            .setSigningKey(Keys.hmacShaKeyFor(secretKey.toByteArray()))
-            .build()
-            .parseEncryptedClaims(token)
-            .payload
+        if (token.isNullOrEmpty()) {
+            return null
+        }
+        val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
+
+        // 解析JWT
+        return try {
+            val claimsJws = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+            return claimsJws.payload
+        } catch (e: Exception) {
+            // 处理解析异常
+            println("Failed to parse JWT: ${e.message}")
+            null
+        }
     }
 }

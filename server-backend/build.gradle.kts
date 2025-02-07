@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "org.napbad"
+group = "org.napbad.serverbackend"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

@@ -31,7 +31,8 @@
 import { defineComponent } from 'vue';
 import { UserAccountController } from "@/api/services";
 import { Executor } from "@/api";
-import {userAccountInfo_localStorageKey} from "@/constants/keys.ts";
+import {userAccountInfo_localStorageKey, userAccountToken_localStorageKey} from "@/api/constants/keys.ts";
+import {ElMessage} from "element-plus";
 
 export default defineComponent({
   data() {
@@ -65,6 +66,7 @@ export default defineComponent({
           },
           body: JSON.stringify(body)
         });
+        console.log(response);
         return response.json();
       };
 
@@ -86,13 +88,25 @@ export default defineComponent({
         body: loginInput
       });
 
-      if (response.authorId) {
-        console.log('登录成功', response);
-        localStorage.setItem(userAccountInfo_localStorageKey, JSON.stringify(response));
-        // 跳转到主页或其他页面
-        this.$router.push('/blog');
-      } else {
-        console.error('登录失败', response);
+      console.log(response);
+
+      try {
+        if (response.msg && response.msg.startsWith("Bearer ")) {
+          console.log('登录成功', response);
+          localStorage.setItem(userAccountInfo_localStorageKey, JSON.stringify(response.authorLoginOutput));
+          localStorage.setItem(userAccountToken_localStorageKey, (response.msg.substring(7)));
+          // 跳转到主页
+          this.$router.push('/blog');
+        } else {
+          console.error('登录失败', response);
+          console.error('result', JSON.stringify(response));
+          console.error('result', response.msg);
+          ElMessage.error('登录失败');
+        }
+      } catch (e) {
+        console.error('登录失败', e);
+        console.error('result', JSON.stringify(response));
+        ElMessage.error('登录失败');
       }
     }
   }

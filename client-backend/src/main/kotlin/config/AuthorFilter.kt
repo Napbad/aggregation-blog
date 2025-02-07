@@ -8,6 +8,8 @@ import org.napbad.expection.ErrorCode
 import org.napbad.expection.ExceptionFactory
 import org.napbad.properties.AuthExcludePathProperties
 import org.napbad.properties.JwtProperties
+import org.napbad.utilities.UserContext
+import org.napbad.utilities.log.logError
 import org.napbad.utilities.log.logInfo
 import org.napbad.utilities.security.JwtUtil
 import org.springframework.stereotype.Component
@@ -47,14 +49,16 @@ class AuthorFilter(
         logInfo("token: $token")
 
         try {
-
-            if (JwtUtil.parseJWT(jwtProperties.jwtSecret, token)?.isEmpty() == true) {
+            val claims = JwtUtil.parseJWT(jwtProperties.jwtSecret, token)
+            if (claims?.isEmpty() == true) {
                 throw ExceptionFactory.exception(ErrorCode.USER_NOT_LOGIN, "token is invalid")
             }
 
+            UserContext.userId = claims?.get("id") as Int
+
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
-            logInfo("error: ${e.message}")
+            logError("error: ${e.message}")
         }
     }
 

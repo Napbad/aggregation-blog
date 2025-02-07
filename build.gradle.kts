@@ -28,6 +28,7 @@ repositories {
 }
 
 val jimmerVersion = "0.9.45"
+val jjwtVersion = "0.12.6"
 
 allprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -40,7 +41,7 @@ allprojects {
 		implementation("org.springframework.boot:spring-boot-starter-web")
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
-		developmentOnly("org.springframework.boot:spring-boot-devtools")
+//		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 		implementation("org.springframework.boot:spring-boot-starter-data-redis")
 		implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -50,8 +51,9 @@ allprojects {
 		runtimeOnly("org.postgresql:postgresql")
 
 		implementation("org.springframework.boot:spring-boot-starter-mail")
-		implementation("io.jsonwebtoken:jjwt-api:0.12.6")
-
+		implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+		runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+		runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
 		runtimeOnly("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.25-1.0.20")
 		compileOnly("org.projectlombok:lombok")

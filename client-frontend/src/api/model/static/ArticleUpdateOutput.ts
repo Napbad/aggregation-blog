@@ -1,4 +1,4 @@
-import type {TimeSource} from './index.ts';
+import type {TimeSource} from './';
 
 export interface ArticleUpdateOutput {
     readonly articleId: number;

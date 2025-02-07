@@ -26,7 +26,9 @@
     </div>
 
     <!-- Vue Markdown Editor 组件 -->
-    <v-md-editor v-model="markdownText" :height="500" class="md-editor"/>
+    <v-md-editor v-model="markdownText"
+                 :height="500"
+                 class="md-editor"/>
 
     <br>
     <br>
@@ -45,7 +47,8 @@ import '@kangc/v-md-editor/lib/theme/style/github.css';
 import { Executor } from '@/api';
 import { ArticleController } from '@/api/services';
 import {useRouter} from "vue-router";
-import {userAccountInfo_localStorageKey} from "@/constants/keys.ts";
+import {userAccountInfo_localStorageKey, userAccountToken_localStorageKey} from "@/api/constants/keys.ts";
+import {AuthorLoginOutput} from "@/api/model/static/AuthorLoginOutput.ts";
 
 export default defineComponent({
   components: {
@@ -80,6 +83,7 @@ export default defineComponent({
         { id: '2', name: '转载' },
         { id: '3', name: '翻译' },
       ],
+      author: null as AuthorLoginOutput | null
     };
   },
   methods: {
@@ -89,16 +93,14 @@ export default defineComponent({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem(userAccountToken_localStorageKey)
           },
           body: JSON.stringify({
-            title: 'test',
+            title: this.title,
             content: this.markdownText,
-            authorId: 'test',
-            authorName: 'test',
-            categoryId: 'test',
-            categoryName: 'test',
-            tagIds: ['test'],
-            tagNames: ['test'],
+            authorId: authorInfo.authorId,
+            category: 'test',
+            copyrightInfo: 'test',
           }),
         });
         return body.json();
@@ -106,17 +108,31 @@ export default defineComponent({
 
       const articleController = new ArticleController(executor);
 
+      const authorInfo :AuthorLoginOutput = JSON.parse(localStorage.getItem(userAccountInfo_localStorageKey)!);
+
+      console.log(this.title)
+
       const response = await articleController.add({
         body: {
-          title: 'test',
+          title: this.title,
           content: this.markdownText,
-          authorId: 1,
+          authorId: authorInfo.authorId,
           category: 'test',
           copyrightInfo: 'test',
         },
       });
 
       console.log(response);
+    },
+    async uploadImage(file: File) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await fetch('/api/files/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      return data.url;
     },
   },
 });

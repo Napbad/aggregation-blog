@@ -1,13 +1,13 @@
-import type {Executor} from '../index.ts';
+import type {Executor} from '../';
 import type {
     AuthorLoginInput, 
-    AuthorLoginOutput, 
+    AuthorLoginResult, 
     AuthorRegisterInput, 
     AuthorRegisterOutput, 
     AuthorUpdateInput, 
     AuthorUpdateOutput, 
     AuthorVerifyInput
-} from '../model/static';
+} from '../model/static/';
 
 export class UserAccountController {
     
@@ -21,10 +21,10 @@ export class UserAccountController {
     }
     
     readonly login: (options: UserAccountControllerOptions['login']) => Promise<
-        AuthorLoginOutput
+        AuthorLoginResult
     > = async(options) => {
         let _uri = '/user-account/login';
-        return (await this.executor({uri: _uri, method: 'POST', body: options.body})) as Promise<AuthorLoginOutput>;
+        return (await this.executor({uri: _uri, method: 'POST', body: options.body})) as Promise<AuthorLoginResult>;
     }
     
     readonly logout: () => Promise<

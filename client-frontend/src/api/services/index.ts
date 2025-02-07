@@ -1,2 +1,3 @@
-export {ArticleController} from './ArticleController.ts';
-export {UserAccountController} from './UserAccountController.ts';
+export {ArticleController} from './ArticleController';
+export {FileController} from './FileController';
+export {UserAccountController} from './UserAccountController';

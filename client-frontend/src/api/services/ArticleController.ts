@@ -1,4 +1,4 @@
-import type {Executor} from '../index.ts';
+import type {Executor} from '../';
 import type {
     ArticleCreateInput, 
     ArticleCreateOutput, 
@@ -8,7 +8,7 @@ import type {
     ArticleUpdateInput, 
     ArticleUpdateOutput, 
     Page
-} from '../model/static';
+} from '../model/static/';
 
 export class ArticleController {
     

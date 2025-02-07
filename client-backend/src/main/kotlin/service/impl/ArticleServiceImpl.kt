@@ -13,7 +13,7 @@ class ArticleServiceImpl(
     val sqlClient: KSqlClient
 ) : ArticleService {
     override fun add(article: ArticleCreateInput): ArticleCreateOutput {
-        var saveResult = sqlClient.save(article)
+        val saveResult = sqlClient.insert(article)
         return ArticleCreateOutput(saveResult.modifiedEntity)
     }
 
